@@ -62,6 +62,10 @@ public final class AdminCommand implements TabExecutor {
             Messages.send(sender, "admin.status-players",
                     "ready", String.valueOf(plugin.sync().readyCount()),
                     "online", String.valueOf(Bukkit.getOnlinePlayers().size()));
+            Messages.send(sender, "admin.status-saves",
+                    "total", String.valueOf(plugin.sync().totalSaves()),
+                    "last", String.valueOf(plugin.sync().lastSaveMillis()),
+                    "failures", String.valueOf(plugin.sync().failedSaves()));
         });
     }
 

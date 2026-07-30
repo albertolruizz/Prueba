@@ -98,3 +98,4 @@ admin:
   status-proxy-on: "<gray>Proxy: <green>activo</green> <gray>(este servidor es '{name}')"
   status-proxy-off: "<gray>Proxy: <yellow>desactivado"
   status-players: "<gray>Jugadores sincronizados: <white>{ready}</white> de <white>{online}</white>"
+  status-saves: "<gray>Guardados: <white>{total}</white> <gray>(último {last} ms, fallos <white>{failures}</white>)"

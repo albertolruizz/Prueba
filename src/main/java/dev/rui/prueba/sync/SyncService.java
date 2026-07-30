@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,6 +34,9 @@ public final class SyncService implements Listener {
     private final RedisBridge redis;
     private final ExecutorService executor;
     private final Set<UUID> ready = ConcurrentHashMap.newKeySet();
+    private final AtomicLong saves = new AtomicLong();
+    private final AtomicLong failures = new AtomicLong();
+    private final AtomicLong lastSaveMillis = new AtomicLong(-1);
     private PendingTeleport pending;
 
     public SyncService(Prueba plugin, MongoStore store, RedisBridge redis, ExecutorService executor) {
@@ -52,6 +56,30 @@ public final class SyncService implements Listener {
 
     public int readyCount() {
         return ready.size();
+    }
+
+    public long totalSaves() {
+        return saves.get();
+    }
+
+    public long failedSaves() {
+        return failures.get();
+    }
+
+    public long lastSaveMillis() {
+        return lastSaveMillis.get();
+    }
+
+    private void write(UUID uuid, Map<String, Object> fields) {
+        long start = System.nanoTime();
+        try {
+            store.save(uuid, fields);
+            saves.incrementAndGet();
+            lastSaveMillis.set((System.nanoTime() - start) / 1_000_000L);
+        } catch (RuntimeException e) {
+            failures.incrementAndGet();
+            throw e;
+        }
     }
 
     @EventHandler
@@ -137,7 +165,7 @@ public final class SyncService implements Listener {
         fields.put("session", session(false));
         executor.execute(() -> {
             try {
-                store.save(uuid, fields);
+                write(uuid, fields);
                 if (redis != null) {
                     redis.publishSaved(uuid);
                 }
@@ -163,7 +191,7 @@ public final class SyncService implements Listener {
                 fields.put("session", session(true));
                 executor.execute(() -> {
                     try {
-                        store.save(uuid, fields);
+                        write(uuid, fields);
                     } catch (Exception e) {
                         plugin.getLogger().warning("Fallo en el autoguardado de " + player.getName() + ": " + e.getMessage());
                     }
@@ -177,7 +205,7 @@ public final class SyncService implements Listener {
         fields.put("session", session(true));
         executor.execute(() -> {
             try {
-                store.save(player.getUniqueId(), fields);
+                write(player.getUniqueId(), fields);
                 if (done != null) {
                     done.run();
                 }
@@ -195,7 +223,7 @@ public final class SyncService implements Listener {
             try {
                 Map<String, Object> fields = PlayerSerializer.capture(player, plugin.settings());
                 fields.put("session", session(false));
-                store.save(player.getUniqueId(), fields);
+                write(player.getUniqueId(), fields);
             } catch (Exception e) {
                 plugin.getLogger().severe("No se pudieron guardar los datos de " + player.getName() + " al apagar: " + e.getMessage());
             }
