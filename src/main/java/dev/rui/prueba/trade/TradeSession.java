@@ -218,11 +218,16 @@ public final class TradeSession {
         } else {
             secondReady = !secondReady;
         }
-        if (firstReady && secondReady) {
-            complete();
-            return;
-        }
-        paintControls();
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (finished) {
+                return;
+            }
+            if (firstReady && secondReady) {
+                complete();
+            } else {
+                paintControls();
+            }
+        });
     }
 
     private void complete() {

@@ -244,11 +244,16 @@ public final class PlayerSerializer {
         if (world == null) {
             return;
         }
-        player.teleportAsync(new Location(world,
+        Location target = new Location(world,
                 point.getDouble("x"),
                 point.getDouble("y"),
                 point.getDouble("z"),
                 point.getDouble("yaw").floatValue(),
-                point.getDouble("pitch").floatValue()));
+                point.getDouble("pitch").floatValue());
+        Location current = player.getLocation();
+        if (current.getWorld().equals(world) && current.distanceSquared(target) < 1.0) {
+            return;
+        }
+        player.teleportAsync(target);
     }
 }
