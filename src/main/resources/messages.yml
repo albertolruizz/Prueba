@@ -1,0 +1,62 @@
+prefix: "<dark_gray>[<aqua>Prueba</aqua>]</dark_gray> "
+
+generic:
+  only-players: "Este comando solo funciona dentro del juego."
+  still-loading: "<red>Tus datos aún se están cargando, espera un momento."
+
+sync:
+  load-failed: "<red>No se han podido cargar tus datos. Vuelve a entrar en unos segundos."
+  apply-failed: "<red>No se han podido aplicar tus datos. Vuelve a entrar en unos segundos."
+
+trade:
+  disabled: "<red>El intercambio está desactivado en este servidor."
+  self: "<red>No puedes intercambiar contigo mismo."
+  unavailable: "<red>Uno de los dos no está disponible para intercambiar ahora mismo."
+  too-far: "<red>Tenéis que estar a menos de <white>{range}</white> bloques para intercambiar."
+  usage: "<gray>Uso: <white>/trade <jugador></white> para proponer, <white>/trade accept</white>, <white>/trade deny</white> o <white>/trade cancel</white>."
+  player-offline: "<red>Ese jugador no está conectado."
+  request-sent: "<green>Petición enviada a <white>{player}</white>."
+  request-received: "<white>{player}</white> quiere intercambiar contigo. <click:run_command:'/trade accept'><green>[Aceptar]</green></click> <click:run_command:'/trade deny'><red>[Rechazar]</red></click> <gray>({seconds}s)</gray>"
+  no-request: "<red>No tienes ninguna petición pendiente."
+  denied: "<gray>Petición rechazada."
+  denied-sender: "<red><white>{player}</white> ha rechazado tu petición."
+  request-withdrawn: "<gray>Petición retirada."
+  none-running: "<red>No tienes ningún intercambio en marcha."
+  instructions: "<gray>Coloca tu oferta y pulsa el botón de confirmar. Si la oferta cambia, las confirmaciones se anulan."
+  offer-changed: "<yellow>La oferta ha cambiado: hay que confirmar de nuevo."
+  offer-full: "<red>No queda sitio en tu oferta."
+  no-space: "<red>No hay hueco suficiente en el inventario de uno de los dos."
+  completed: "<green>Intercambio completado."
+  cancelled: "<red>Intercambio cancelado."
+  cancelled-by: "<red>Intercambio cancelado por <white>{player}</white>."
+  cancelled-quit: "<red>Intercambio cancelado: el otro jugador se ha desconectado."
+  cancelled-shutdown: "<red>Intercambio cancelado: el servidor se está apagando."
+  gui:
+    title: "<dark_aqua>Intercambio con {player}"
+    confirm: "<yellow>Confirmar"
+    confirm-lore: "<gray>Pulsa cuando la oferta te convenga."
+    confirmed: "<green>Confirmado"
+    confirmed-lore: "<gray>Pulsa para retirar tu confirmación."
+    partner-ready: "<green>{player} ha confirmado"
+    partner-waiting: "<yellow>Esperando a {player}..."
+    summary: "<aqua>Estado del intercambio"
+    summary-give: "<gray>Ofreces <white>{amount}</white> objeto(s)."
+    summary-receive: "<gray>Recibes <white>{amount}</white> objeto(s)."
+
+
+
+
+admin:
+  usage: "<gray>Uso: <white>/prueba <status|save [jugador]|reload></white>"
+  unknown-sub: "<red>Subcomando desconocido."
+  reloaded: "<green>Configuración recargada. <gray>Los cambios de conexión (MongoDB/Redis) requieren reinicio."
+  save-usage: "<red>Indica un jugador: <white>/prueba save <jugador></white>"
+  player-offline: "<red>Ese jugador no está conectado."
+  player-loading: "<red>Los datos de ese jugador aún se están cargando."
+  saved: "<green>Datos de <white>{player}</white> guardados."
+  status-server: "<gray>Servidor: <white>{server}</white>"
+  status-mongo-ok: "<gray>MongoDB: <green>conectado</green> <gray>({ms} ms)"
+  status-mongo-fail: "<gray>MongoDB: <red>sin conexión"
+  status-redis-on: "<gray>Redis: <green>activo"
+  status-redis-off: "<gray>Redis: <yellow>desactivado"
+  status-players: "<gray>Jugadores sincronizados: <white>{ready}</white> de <white>{online}</white>"

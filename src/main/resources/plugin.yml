@@ -1,0 +1,20 @@
+name: Prueba
+version: '${version}'
+main: dev.rui.prueba.Prueba
+api-version: '1.21'
+author: Rui
+description: Sincronizacion de datos de jugador entre servidores con MongoDB, Redis opcional e intercambio de objetos entre jugadores.
+commands:
+  prueba:
+    description: Administracion del plugin.
+    permission: prueba.admin
+    usage: /prueba <status|save|reload>
+  trade:
+    description: Intercambia objetos con otro jugador.
+    permission: prueba.trade
+    usage: /trade <jugador|accept|deny|cancel>
+permissions:
+  prueba.admin:
+    default: op
+  prueba.trade:
+    default: true

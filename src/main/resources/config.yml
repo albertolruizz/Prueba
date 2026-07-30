@@ -1,0 +1,29 @@
+server: "server-1"
+
+mongodb:
+  uri: "mongodb://localhost:27017"
+  database: "prueba"
+  collection: "players"
+
+save:
+  interval-seconds: 300
+  on-quit: true
+  fields:
+    profile: true
+    state: true
+    locations: true
+    inventory: true
+    statistics: true
+
+redis:
+  enabled: false
+  host: "localhost"
+  port: 6379
+  password: ""
+  channel: "prueba:sync"
+  log-handover: true
+
+trade:
+  enabled: true
+  max-range: 10.0
+  request-seconds: 30
