@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -37,6 +38,10 @@ public final class MongoStore implements Closeable {
 
     public Document load(UUID uuid) {
         return players.find(Filters.eq("_id", uuid.toString())).first();
+    }
+
+    public Document findByName(String name) {
+        return players.find(Filters.regex("name", "^" + Pattern.quote(name) + "$", "i")).first();
     }
 
     public void save(UUID uuid, Map<String, Object> fields) {

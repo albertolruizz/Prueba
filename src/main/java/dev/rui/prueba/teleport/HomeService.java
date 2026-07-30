@@ -14,9 +14,11 @@ import org.bukkit.entity.Player;
 public final class HomeService {
 
     private final Prueba plugin;
+    private final PendingTeleport pending;
 
-    public HomeService(Prueba plugin) {
+    public HomeService(Prueba plugin, PendingTeleport pending) {
         this.plugin = plugin;
+        this.pending = pending;
     }
 
     public void save(Player player, String name) {
@@ -103,7 +105,7 @@ public final class HomeService {
             }
             String server = home.getString("server");
             if (!plugin.settings().server.equals(server)) {
-                Messages.send(player, "homes.other-server", "server", server, "name", key);
+                travelToOtherServer(player, key, server);
                 return;
             }
             Bukkit.getScheduler().runTask(plugin, () -> {
@@ -120,6 +122,27 @@ public final class HomeService {
                         home.getDouble("yaw").floatValue(), home.getDouble("pitch").floatValue()));
                 Messages.send(player, "homes.arrived", "name", key);
             });
+        });
+    }
+
+    private void travelToOtherServer(Player player, String key, String server) {
+        if (!plugin.settings().proxyEnabled) {
+            Messages.send(player, "homes.other-server", "server", server, "name", key);
+            return;
+        }
+        try {
+            pending.toHome(player.getUniqueId(), server, key);
+        } catch (Exception e) {
+            Messages.send(player, "proxy.failed");
+            plugin.getLogger().warning("No se pudo anotar el viaje de " + player.getName() + ": " + e.getMessage());
+            return;
+        }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (!player.isOnline()) {
+                return;
+            }
+            Messages.send(player, "homes.sending", "server", server);
+            plugin.proxy().send(player, plugin.settings().proxyName(server));
         });
     }
 

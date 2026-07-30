@@ -3,6 +3,7 @@ package dev.rui.prueba.sync;
 import dev.rui.prueba.Prueba;
 import dev.rui.prueba.mongo.MongoStore;
 import dev.rui.prueba.redis.RedisBridge;
+import dev.rui.prueba.teleport.PendingTeleport;
 import dev.rui.prueba.util.Messages;
 import java.util.Date;
 import java.util.Map;
@@ -32,12 +33,17 @@ public final class SyncService implements Listener {
     private final RedisBridge redis;
     private final ExecutorService executor;
     private final Set<UUID> ready = ConcurrentHashMap.newKeySet();
+    private PendingTeleport pending;
 
     public SyncService(Prueba plugin, MongoStore store, RedisBridge redis, ExecutorService executor) {
         this.plugin = plugin;
         this.store = store;
         this.redis = redis;
         this.executor = executor;
+    }
+
+    public void setPending(PendingTeleport pending) {
+        this.pending = pending;
     }
 
     public boolean isReady(UUID uuid) {
@@ -80,6 +86,9 @@ public final class SyncService implements Listener {
                     }
                 }
                 ready.add(uuid);
+                if (pending != null) {
+                    pending.resume(player, data);
+                }
             });
         });
     }

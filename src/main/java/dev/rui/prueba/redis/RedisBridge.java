@@ -2,11 +2,14 @@ package dev.rui.prueba.redis;
 
 import dev.rui.prueba.config.Settings;
 import java.io.Closeable;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -19,6 +22,7 @@ public final class RedisBridge implements Closeable {
     private final Logger log;
     private final JedisPool pool;
     private final Map<UUID, CountDownLatch> waiting = new ConcurrentHashMap<>();
+    private final List<Consumer<String[]>> listeners = new CopyOnWriteArrayList<>();
     private final JedisPubSub subscription;
     private volatile boolean closed;
 
@@ -63,9 +67,31 @@ public final class RedisBridge implements Closeable {
         }
     }
 
+    public void addListener(Consumer<String[]> listener) {
+        listeners.add(listener);
+    }
+
+    public void publish(String message) {
+        try (Jedis jedis = pool.getResource()) {
+            jedis.publish(settings.redisChannel, message);
+        } catch (Exception e) {
+            log.warning("No se pudo publicar en Redis: " + e.getMessage());
+        }
+    }
+
     private void handle(String message) {
         String[] parts = message.split("\\|");
-        if (parts.length < 3 || !parts[0].equals("saved")) {
+        if (parts.length < 3) {
+            return;
+        }
+        if (!parts[0].equals("saved")) {
+            for (Consumer<String[]> listener : listeners) {
+                try {
+                    listener.accept(parts);
+                } catch (Exception e) {
+                    log.warning("Error procesando el mensaje '" + parts[0] + "' de Redis: " + e.getMessage());
+                }
+            }
             return;
         }
         if (parts[2].equals(settings.server)) {
@@ -87,11 +113,7 @@ public final class RedisBridge implements Closeable {
     }
 
     public void publishSaved(UUID uuid) {
-        try (Jedis jedis = pool.getResource()) {
-            jedis.publish(settings.redisChannel, "saved|" + uuid + "|" + settings.server);
-        } catch (Exception e) {
-            log.warning("No se pudo publicar el guardado de " + uuid + " en Redis: " + e.getMessage());
-        }
+        publish("saved|" + uuid + "|" + settings.server);
     }
 
     public void awaitSave(UUID uuid, long millis) throws InterruptedException {

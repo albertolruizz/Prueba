@@ -53,6 +53,12 @@ public final class AdminCommand implements TabExecutor {
                 Messages.send(sender, "admin.status-mongo-fail");
             }
             Messages.send(sender, plugin.redis() != null ? "admin.status-redis-on" : "admin.status-redis-off");
+            if (plugin.settings().proxyEnabled) {
+                Messages.send(sender, "admin.status-proxy-on",
+                        "name", plugin.settings().proxyName(plugin.settings().server));
+            } else {
+                Messages.send(sender, "admin.status-proxy-off");
+            }
             Messages.send(sender, "admin.status-players",
                     "ready", String.valueOf(plugin.sync().readyCount()),
                     "online", String.valueOf(Bukkit.getOnlinePlayers().size()));

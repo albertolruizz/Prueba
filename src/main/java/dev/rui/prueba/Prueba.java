@@ -3,10 +3,12 @@ package dev.rui.prueba;
 import dev.rui.prueba.command.AdminCommand;
 import dev.rui.prueba.config.Settings;
 import dev.rui.prueba.mongo.MongoStore;
+import dev.rui.prueba.proxy.ProxyBridge;
 import dev.rui.prueba.redis.RedisBridge;
 import dev.rui.prueba.sync.SyncService;
 import dev.rui.prueba.teleport.HomeCommand;
 import dev.rui.prueba.teleport.HomeService;
+import dev.rui.prueba.teleport.PendingTeleport;
 import dev.rui.prueba.teleport.TeleportCommand;
 import dev.rui.prueba.teleport.TeleportRequests;
 import dev.rui.prueba.trade.TradeCommand;
@@ -24,6 +26,7 @@ public final class Prueba extends JavaPlugin {
     private RedisBridge redis;
     private SyncService sync;
     private TradeManager trades;
+    private ProxyBridge proxy;
     private ExecutorService executor;
 
     @Override
@@ -55,7 +58,11 @@ public final class Prueba extends JavaPlugin {
                 getLogger().warning("Redis no disponible, se sigue sin él: " + e.getMessage());
             }
         }
+        proxy = new ProxyBridge(this);
+        PendingTeleport pending = new PendingTeleport(this);
+
         sync = new SyncService(this, store, redis, executor);
+        sync.setPending(pending);
         getServer().getPluginManager().registerEvents(sync, this);
         sync.startAutoSave();
 
@@ -63,12 +70,12 @@ public final class Prueba extends JavaPlugin {
         getServer().getPluginManager().registerEvents(trades, this);
         register("trade", new TradeCommand(trades));
 
-        HomeCommand homeCommand = new HomeCommand(this, new HomeService(this));
+        HomeCommand homeCommand = new HomeCommand(this, new HomeService(this, pending));
         for (String name : new String[]{"sethome", "home", "delhome", "homes"}) {
             register(name, homeCommand);
         }
 
-        TeleportRequests teleportRequests = new TeleportRequests(this);
+        TeleportRequests teleportRequests = new TeleportRequests(this, pending);
         getServer().getPluginManager().registerEvents(teleportRequests, this);
         TeleportCommand teleportCommand = new TeleportCommand(this, teleportRequests);
         for (String name : new String[]{"tpa", "tpaccept", "tpdeny"}) {
@@ -124,6 +131,10 @@ public final class Prueba extends JavaPlugin {
 
     public SyncService sync() {
         return sync;
+    }
+
+    public ProxyBridge proxy() {
+        return proxy;
     }
 
     public ExecutorService executor() {

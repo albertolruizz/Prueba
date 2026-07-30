@@ -35,3 +35,9 @@ homes:
 teleport-requests:
   enabled: true
   request-seconds: 60
+
+proxy:
+  enabled: false
+  server-names:
+    server-1: "server-1"
+    server-2: "server-2"

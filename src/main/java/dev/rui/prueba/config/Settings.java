@@ -1,7 +1,9 @@
 package dev.rui.prueba.config;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,8 +29,10 @@ public final class Settings {
     public final int homesLimit;
     public final boolean teleportRequestsEnabled;
     public final int teleportRequestSeconds;
+    public final boolean proxyEnabled;
 
     private final Set<String> enabledFields = new HashSet<>();
+    private final Map<String, String> proxyNames = new HashMap<>();
 
     public Settings(FileConfiguration cfg) {
         server = cfg.getString("server", "server-1");
@@ -58,9 +62,20 @@ public final class Settings {
         homesLimit = cfg.getInt("homes.limit", 3);
         teleportRequestsEnabled = cfg.getBoolean("teleport-requests.enabled", true);
         teleportRequestSeconds = cfg.getInt("teleport-requests.request-seconds", 60);
+        proxyEnabled = cfg.getBoolean("proxy.enabled", false);
+        ConfigurationSection names = cfg.getConfigurationSection("proxy.server-names");
+        if (names != null) {
+            for (String key : names.getKeys(false)) {
+                proxyNames.put(key, names.getString(key));
+            }
+        }
     }
 
     public boolean field(String name) {
         return enabledFields.contains(name);
+    }
+
+    public String proxyName(String server) {
+        return proxyNames.getOrDefault(server, server);
     }
 }

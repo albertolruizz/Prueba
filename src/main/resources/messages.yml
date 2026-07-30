@@ -59,6 +59,7 @@ homes:
   world-missing: "<red>El mundo de ese hogar ya no existe."
   arrived: "<green>De vuelta en <white>{name}</white>."
   other-server: "<yellow>Ese hogar está en <white>{server}</white>. Cambia de servidor y vuelve a usar <white>/home {name}</white>."
+  sending: "<green>Enviándote a <white>{server}</white>..."
 
 tpa:
   disabled: "<red>Las peticiones de teletransporte están desactivadas en este servidor."
@@ -67,13 +68,19 @@ tpa:
   player-offline: "<red>Ese jugador no está conectado en ningún servidor."
   request-sent: "<green>Petición enviada a <white>{player}</white>."
   request-received: "<white>{player}</white> quiere teletransportarse a ti. <click:run_command:'/tpaccept'><green>[Aceptar]</green></click> <click:run_command:'/tpdeny'><red>[Rechazar]</red></click> <gray>({seconds}s)</gray>"
+  request-received-other: "<white>{player}</white> quiere teletransportarse a ti desde <white>{server}</white>. <click:run_command:'/tpaccept'><green>[Aceptar]</green></click> <click:run_command:'/tpdeny'><red>[Rechazar]</red></click> <gray>({seconds}s)</gray>"
   no-request: "<red>No tienes ninguna petición pendiente."
   offline: "<red>Ese jugador ya no está conectado."
   denied: "<gray>Petición rechazada."
   denied-sender: "<red><white>{player}</white> ha rechazado tu petición."
   teleported: "<green>Teletransportado a <white>{player}</white>."
   teleported-target: "<green><white>{player}</white> se ha teletransportado a ti."
+  accepted-remote: "<green><white>{player}</white> ha aceptado. Enviándote a <white>{server}</white>..."
+  target-gone: "<red>Ese jugador ya no está en este servidor."
 
+proxy:
+  disabled: "<red>El cambio de servidor no está configurado. Avisa a un administrador."
+  failed: "<red>No se pudo cambiar de servidor. Inténtalo de nuevo."
 
 admin:
   usage: "<gray>Uso: <white>/prueba <status|save [jugador]|reload></white>"
@@ -88,4 +95,6 @@ admin:
   status-mongo-fail: "<gray>MongoDB: <red>sin conexión"
   status-redis-on: "<gray>Redis: <green>activo"
   status-redis-off: "<gray>Redis: <yellow>desactivado"
+  status-proxy-on: "<gray>Proxy: <green>activo</green> <gray>(este servidor es '{name}')"
+  status-proxy-off: "<gray>Proxy: <yellow>desactivado"
   status-players: "<gray>Jugadores sincronizados: <white>{ready}</white> de <white>{online}</white>"
