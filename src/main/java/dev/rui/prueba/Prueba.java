@@ -5,6 +5,8 @@ import dev.rui.prueba.config.Settings;
 import dev.rui.prueba.mongo.MongoStore;
 import dev.rui.prueba.redis.RedisBridge;
 import dev.rui.prueba.sync.SyncService;
+import dev.rui.prueba.trade.TradeCommand;
+import dev.rui.prueba.trade.TradeManager;
 import dev.rui.prueba.util.Messages;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +19,7 @@ public final class Prueba extends JavaPlugin {
     private MongoStore store;
     private RedisBridge redis;
     private SyncService sync;
+    private TradeManager trades;
     private ExecutorService executor;
 
     @Override
@@ -52,12 +55,19 @@ public final class Prueba extends JavaPlugin {
         getServer().getPluginManager().registerEvents(sync, this);
         sync.startAutoSave();
 
+        trades = new TradeManager(this, sync);
+        getServer().getPluginManager().registerEvents(trades, this);
+        register("trade", new TradeCommand(trades));
+
         register("prueba", new AdminCommand(this));
         getLogger().info("Sincronización activa como '" + settings.server + "'.");
     }
 
     @Override
     public void onDisable() {
+        if (trades != null) {
+            trades.cancelAll();
+        }
         if (sync != null) {
             sync.saveAll();
         }
