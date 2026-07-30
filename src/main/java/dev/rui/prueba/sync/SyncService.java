@@ -124,7 +124,7 @@ public final class SyncService implements Listener {
     private Document loadAfterHandover(UUID uuid) throws InterruptedException {
         Document data = store.load(uuid);
         int attempts = 0;
-        while (data != null && busyElsewhere(data) && attempts++ < HANDOVER_RETRIES) {
+        while (SessionGuard.busyElsewhere(data, plugin.settings().server) && attempts++ < HANDOVER_RETRIES) {
             if (redis != null) {
                 redis.awaitSave(uuid, HANDOVER_WAIT_MS);
             } else {
@@ -133,15 +133,6 @@ public final class SyncService implements Listener {
             data = store.load(uuid);
         }
         return data;
-    }
-
-    private boolean busyElsewhere(Document data) {
-        Document session = data.get("session", Document.class);
-        if (session == null || !Boolean.TRUE.equals(session.getBoolean("online"))) {
-            return false;
-        }
-        String server = session.getString("server");
-        return server != null && !server.equals(plugin.settings().server);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

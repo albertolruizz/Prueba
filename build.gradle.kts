@@ -16,6 +16,13 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-sync:5.2.1")
     implementation("redis.clients:jedis:5.1.5")
 
+    testImplementation("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 java {
