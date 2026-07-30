@@ -23,6 +23,10 @@ public final class Settings {
     public final boolean tradeEnabled;
     public final double tradeRange;
     public final int tradeRequestSeconds;
+    public final boolean homesEnabled;
+    public final int homesLimit;
+    public final boolean teleportRequestsEnabled;
+    public final int teleportRequestSeconds;
 
     private final Set<String> enabledFields = new HashSet<>();
 
@@ -50,6 +54,10 @@ public final class Settings {
         tradeEnabled = cfg.getBoolean("trade.enabled", true);
         tradeRange = cfg.getDouble("trade.max-range", 10.0);
         tradeRequestSeconds = cfg.getInt("trade.request-seconds", 30);
+        homesEnabled = cfg.getBoolean("homes.enabled", true);
+        homesLimit = cfg.getInt("homes.limit", 3);
+        teleportRequestsEnabled = cfg.getBoolean("teleport-requests.enabled", true);
+        teleportRequestSeconds = cfg.getInt("teleport-requests.request-seconds", 60);
     }
 
     public boolean field(String name) {

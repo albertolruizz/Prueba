@@ -27,3 +27,11 @@ trade:
   enabled: true
   max-range: 10.0
   request-seconds: 30
+
+homes:
+  enabled: true
+  limit: 3
+
+teleport-requests:
+  enabled: true
+  request-seconds: 60

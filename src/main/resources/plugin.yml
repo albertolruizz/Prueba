@@ -13,8 +13,40 @@ commands:
     description: Intercambia objetos con otro jugador.
     permission: prueba.trade
     usage: /trade <jugador|accept|deny|cancel>
+  sethome:
+    description: Guarda tu posicion como hogar.
+    permission: prueba.homes
+    usage: /sethome [nombre]
+  home:
+    description: Viaja a uno de tus hogares.
+    permission: prueba.homes
+    usage: /home [nombre]
+  delhome:
+    description: Borra uno de tus hogares.
+    permission: prueba.homes
+    usage: /delhome [nombre]
+  homes:
+    description: Lista tus hogares y en que servidor esta cada uno.
+    permission: prueba.homes
+    usage: /homes
+  tpa:
+    description: Pide teletransportarte a otro jugador.
+    permission: prueba.tpa
+    usage: /tpa <jugador>
+  tpaccept:
+    description: Acepta una peticion de teletransporte.
+    permission: prueba.tpa
+    usage: /tpaccept
+  tpdeny:
+    description: Rechaza una peticion de teletransporte.
+    permission: prueba.tpa
+    usage: /tpdeny
 permissions:
   prueba.admin:
     default: op
   prueba.trade:
+    default: true
+  prueba.homes:
+    default: true
+  prueba.tpa:
     default: true

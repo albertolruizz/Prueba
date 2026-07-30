@@ -46,6 +46,15 @@ public final class MongoStore implements Closeable {
         players.updateOne(Filters.eq("_id", uuid.toString()), Updates.combine(updates), UPSERT);
     }
 
+    public void setField(UUID uuid, String key, Object value) {
+        players.updateOne(Filters.eq("_id", uuid.toString()),
+                Updates.combine(Updates.set(key, value), Updates.setOnInsert("created", new Date())), UPSERT);
+    }
+
+    public void unsetField(UUID uuid, String key) {
+        players.updateOne(Filters.eq("_id", uuid.toString()), Updates.unset(key));
+    }
+
     public void markSession(UUID uuid, String server, boolean online) {
         Bson updates = Updates.combine(
                 Updates.set("session.server", server),

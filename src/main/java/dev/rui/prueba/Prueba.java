@@ -5,6 +5,10 @@ import dev.rui.prueba.config.Settings;
 import dev.rui.prueba.mongo.MongoStore;
 import dev.rui.prueba.redis.RedisBridge;
 import dev.rui.prueba.sync.SyncService;
+import dev.rui.prueba.teleport.HomeCommand;
+import dev.rui.prueba.teleport.HomeService;
+import dev.rui.prueba.teleport.TeleportCommand;
+import dev.rui.prueba.teleport.TeleportRequests;
 import dev.rui.prueba.trade.TradeCommand;
 import dev.rui.prueba.trade.TradeManager;
 import dev.rui.prueba.util.Messages;
@@ -58,6 +62,18 @@ public final class Prueba extends JavaPlugin {
         trades = new TradeManager(this, sync);
         getServer().getPluginManager().registerEvents(trades, this);
         register("trade", new TradeCommand(trades));
+
+        HomeCommand homeCommand = new HomeCommand(this, new HomeService(this));
+        for (String name : new String[]{"sethome", "home", "delhome", "homes"}) {
+            register(name, homeCommand);
+        }
+
+        TeleportRequests teleportRequests = new TeleportRequests(this);
+        getServer().getPluginManager().registerEvents(teleportRequests, this);
+        TeleportCommand teleportCommand = new TeleportCommand(this, teleportRequests);
+        for (String name : new String[]{"tpa", "tpaccept", "tpdeny"}) {
+            register(name, teleportCommand);
+        }
 
         register("prueba", new AdminCommand(this));
         getLogger().info("Sincronización activa como '" + settings.server + "'.");

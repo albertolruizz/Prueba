@@ -43,7 +43,36 @@ trade:
     summary-give: "<gray>Ofreces <white>{amount}</white> objeto(s)."
     summary-receive: "<gray>Recibes <white>{amount}</white> objeto(s)."
 
+homes:
+  disabled: "<red>Los hogares están desactivados en este servidor."
+  limit-reached: "<red>Ya tienes <white>{limit}</white> hogares. Borra uno con <white>/delhome</white>."
+  saved: "<green>Hogar <white>{name}</white> guardado."
+  save-error: "<red>No se pudo guardar el hogar."
+  unknown: "<red>No tienes ningún hogar llamado <white>{name}</white>."
+  deleted: "<gray>Hogar <white>{name}</white> borrado."
+  delete-error: "<red>No se pudo borrar el hogar."
+  read-error: "<red>No se pudieron leer tus hogares."
+  empty: "<gray>No tienes hogares. Crea uno con <white>/sethome <nombre></white>."
+  list: "<gray>Tus hogares: {homes}"
+  list-entry: "<white>{name}</white> <gray>({server})"
+  list-entry-other: "<white>{name}</white> <gray>({server}, otro servidor)"
+  world-missing: "<red>El mundo de ese hogar ya no existe."
+  arrived: "<green>De vuelta en <white>{name}</white>."
+  other-server: "<yellow>Ese hogar está en <white>{server}</white>. Cambia de servidor y vuelve a usar <white>/home {name}</white>."
 
+tpa:
+  disabled: "<red>Las peticiones de teletransporte están desactivadas en este servidor."
+  self: "<red>No puedes teletransportarte a ti mismo."
+  usage: "<gray>Uso: <white>/tpa <jugador></white>"
+  player-offline: "<red>Ese jugador no está conectado en ningún servidor."
+  request-sent: "<green>Petición enviada a <white>{player}</white>."
+  request-received: "<white>{player}</white> quiere teletransportarse a ti. <click:run_command:'/tpaccept'><green>[Aceptar]</green></click> <click:run_command:'/tpdeny'><red>[Rechazar]</red></click> <gray>({seconds}s)</gray>"
+  no-request: "<red>No tienes ninguna petición pendiente."
+  offline: "<red>Ese jugador ya no está conectado."
+  denied: "<gray>Petición rechazada."
+  denied-sender: "<red><white>{player}</white> ha rechazado tu petición."
+  teleported: "<green>Teletransportado a <white>{player}</white>."
+  teleported-target: "<green><white>{player}</white> se ha teletransportado a ti."
 
 
 admin:
